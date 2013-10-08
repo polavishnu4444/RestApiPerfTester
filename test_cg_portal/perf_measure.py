@@ -43,12 +43,21 @@ class TestMeta:
         # resp.data = resp.json()
 
     def appServer(self):
-        self.gr.get('http://ec2-46-137-227-13.ap-southeast-1.compute.amazonaws.com/1/api/TempObject',
-                                      headers={"CG-CLIENTID": "524e610a98c8efe25c000004",
-                "CG-CLIENTKEY": "2e2b3174-90e8-483e-a634-9b174c2e2f54",
+        self.gr.get('http://ec2-46-137-227-13.ap-southeast-1.compute.amazonaws.com/1/api/NewTempObject',
+                                      headers={"CG-CLIENTID": "5252b9b3a2fbcbc83a00002c",
+                "CG-CLIENTKEY": "b4808c69-36ed-429f-8ca3-19df7227a35d",
                 "CG-TENANTID": "1",
-                "CG-USERID": "vishnu",
-                "CG-USERKEY": "vishnu"}, hooks=dict(response=self.bg_cb))
+                "CG-USERID": "admin",
+                "CG-USERKEY": "admin"}, hooks=dict(response=self.bg_cb))
+
+    def appServerProd(self):
+        self.gr.get('http://ec2-46-137-228-225.ap-southeast-1.compute.amazonaws.com/1/api/NewTempObject',
+                                      headers={"CG-CLIENTID": "52536ca196fa6d171a000004",
+                "CG-CLIENTKEY": "2df74b80-2d70-4a57-ab1c-5644f82bde31",
+                "CG-TENANTID": "1",
+                "CG-USERID": "admin",
+                "CG-USERTOKEN":"82884d183b8d3d3fce1697fc0398c64c",
+                "CG-USERKEY": "admin"}, hooks=dict(response=self.bg_cb))
 
     def authServer(self):
         self.gr.post('http://ec2-54-251-87-255.ap-southeast-1.compute.amazonaws.com:7890/authenticateappuser',
@@ -58,12 +67,9 @@ class TestMeta:
                                        hooks=dict(response=self.bg_cb))
 
     def authServerToken(self):
-        self.gr.post('http://ec2-54-251-87-255.ap-southeast-1.compute.amazonaws.com:7890/authenticatecguser',
+        self.gr.post('http://ec2-54-251-87-255.ap-southeast-1.compute.amazonaws.com:7890/authenticateappuser',
                                        data = json.dumps({"token":"1d15540ba5f93e5331b079ff8d6721c1"}),
                                        hooks=dict(response=self.bg_cb))
-        # future.append(self.session.post('http://192.168.40.33:7890/authenticatecguser',
-        #                                json.dumps({"token":"e9529a19db8a2c1b3f8adb0a83514c9b"}),
-        #                                background_callback= self.bg_cb))
 
     def perfTester(self, setNumber):        
         self.setNum = setNumber
@@ -74,8 +80,8 @@ class TestMeta:
         while counter <= self.CONCURRENCY:
             # print "requsted", counter
             counter += 1
-            self.future.append(gevent.spawn(self.authServerToken))
-            #self.future.append(gevent.spawn(self.appServer))
+            # self.future.append(gevent.spawn(self.authServer))
+            self.future.append(gevent.spawn(self.appServer))
             # gevent.sleep(0)
             #gevent.sleep(sleep_time)
         # grequests.map(future)
